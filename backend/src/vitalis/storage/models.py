@@ -12,7 +12,7 @@ class ObservationRecord(Base):
     __tablename__ = "observations"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    crew_member_id: Mapped[str] = mapped_column(String(80), index=True)
+    crew_member_id: Mapped[str | None] = mapped_column(String(80), index=True, nullable=True)
     metric_id: Mapped[str] = mapped_column(String(100), index=True)
     value: Mapped[Any] = mapped_column(JSON, nullable=False)
     unit: Mapped[str] = mapped_column(String(40))
