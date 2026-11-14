@@ -48,7 +48,7 @@ def test_observation_can_be_submitted_and_persisted(tmp_path) -> None:
         listed = client.get("/api/v1/observations")
 
         assert created.status_code == 201
-        assert created.json()["observed_at"].endswith("+00:00")
+        assert created.json()["observed_at"].endswith(("Z", "+00:00"))
         assert listed.status_code == 200
         assert len(listed.json()) == 1
 
