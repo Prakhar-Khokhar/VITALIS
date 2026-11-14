@@ -1,0 +1,1 @@
+"""VITALIS backend package."""

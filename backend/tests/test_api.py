@@ -1,0 +1,39 @@
+from fastapi.testclient import TestClient
+
+from vitalis.core.config import Settings
+from vitalis.main import create_app
+
+
+def test_demo_api_exposes_synthetic_observations(tmp_path) -> None:
+    database_path = tmp_path / "test.db"
+    settings = Settings(
+        _env_file=None,
+        database_url=f"sqlite+aiosqlite:///{database_path}",
+        demo_mode=True,
+        demo_seed=2026,
+    )
+    app = create_app(settings)
+
+    with TestClient(app) as client:
+        health = client.get("/api/v1/health")
+        observations = client.get("/api/v1/observations")
+
+        assert health.status_code == 200
+        assert health.json()["demo_mode"] is True
+        assert observations.status_code == 200
+        assert len(observations.json()) == 35
+        assert all(item["synthetic"] is True for item in observations.json())
+
+
+def test_demo_reset_is_unavailable_when_demo_mode_is_disabled(tmp_path) -> None:
+    database_path = tmp_path / "production-like.db"
+    settings = Settings(
+        _env_file=None,
+        database_url=f"sqlite+aiosqlite:///{database_path}",
+        demo_mode=False,
+    )
+    app = create_app(settings)
+
+    with TestClient(app) as client:
+        response = client.post("/api/v1/demo/reset")
+        assert response.status_code == 404
