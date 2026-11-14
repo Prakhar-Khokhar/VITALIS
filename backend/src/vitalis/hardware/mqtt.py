@@ -49,9 +49,9 @@ class MqttJsonSource:
 
         client.on_connect = on_connect
         client.on_message = on_message
-        client.connect(self.host, self.port, keepalive=30)
+        client.connect_async(self.host, self.port, keepalive=30)
         client.loop_start()
-        logger.info("MQTT observation source subscribed to %s", self.topic)
+        logger.info("MQTT observation source connecting to %s:%s", self.host, self.port)
         try:
             while True:
                 yield await queue.get()

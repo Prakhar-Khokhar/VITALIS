@@ -12,3 +12,4 @@ class Settings(BaseSettings):
     database_url: str = "sqlite+aiosqlite:///./vitalis.db"
     demo_mode: bool = True
     demo_seed: int = 2026
+    cors_origins: list[str] = ["http://localhost:5173"]

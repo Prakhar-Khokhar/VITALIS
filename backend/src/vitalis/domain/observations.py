@@ -27,7 +27,7 @@ class HealthObservation(BaseModel):
 
     @field_validator("observed_at")
     @classmethod
-    def require_timezone(cls, value: datetime) -> datetime:
+    def normalize_timestamp_to_utc(cls, value: datetime) -> datetime:
         if value.tzinfo is None or value.utcoffset() is None:
             raise ValueError("observed_at must include a timezone")
-        return value
+        return value.astimezone(UTC)

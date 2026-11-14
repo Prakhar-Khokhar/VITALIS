@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from vitalis.api.routes import router
 from vitalis.core.config import Settings
@@ -35,6 +36,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         ),
         version="0.1.0",
         lifespan=lifespan,
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=app_settings.cors_origins,
+        allow_credentials=False,
+        allow_methods=["GET", "POST"],
+        allow_headers=["*"],
     )
     app.include_router(router, prefix="/api/v1")
     return app
