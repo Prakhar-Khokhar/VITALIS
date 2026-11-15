@@ -17,6 +17,11 @@ For optional hardware transports: `python -m pip install -e ".[dev,hardware]"`. 
 ## Configuration
 Copy `.env.example` to `.env`. Variables use the `VITALIS_` prefix.
 
+## Database schema compatibility
+SQLAlchemy's `create_all()` bootstrap creates missing tables but does not migrate existing columns. A SQLite database created under the earlier foundation schema can therefore keep a `NOT NULL` constraint on `observations.crew_member_id` and reject valid environmental observations.
+
+By default, the local `vitalis.db` is a demo store. If it contains only disposable synthetic demo data, it may be reset or recreated with a fresh database path before using environmental observations. Do not delete or recreate a database that may contain real user or crew-health data: back it up and use a reviewed schema migration first. This prototype does not currently include migration tooling, and persistent crew-health data must not be treated as disposable demo data.
+
 ## API
 - `GET /api/v1/health`
 - `GET /api/v1/observations`
